@@ -16,20 +16,25 @@ export class TollbitClient {
 
   private headers() {
     return {
-      Authorization: `Bearer ${this.config.get<string>('TOLLBIT_API_KEY')}`,
+      TollbitKey: this.config.get<string>('TOLLBIT_API_KEY'),
       'Content-Type': 'application/json',
+      Accept: 'application/json',
     };
   }
 
   async generateToken(url: string) {
     const res = await firstValueFrom(
-      this.http.post(`${this.baseUrl}/tokens/content`, {
-        url,
-        userAgent: 'TollbitSample/1.0',
-        maxPriceMicros: 0,
-        currency: 'USD',
-        licenseType: 'standard'
-      }, { headers: this.headers() }),
+      this.http.post(
+        `${this.baseUrl}/tokens/content`,
+        {
+          url,
+          userAgent: 'julaide-bot',
+          maxPriceMicros: 1000000,
+          currency: 'USD',
+          licenseType: 'ON_DEMAND_LICENSE',
+        },
+        { headers: this.headers() },
+      ),
     );
     return res.data;
   }
